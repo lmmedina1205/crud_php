@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CRUD con PHP, PDO, Ajax y Datatables.js</title>
     <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="//cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="node_modules/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="css/estilos.css">
   </head>
@@ -56,7 +56,7 @@
                     <h5 class="modal-title" id="exampleModalLabel">Crear Usuario</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" id="formulario"enctype="multipart/form-data">
+                <form method="POST" id="formulario" enctype="multipart/form-data">
                     <div class="modal-content">
                         <div class="modal-body">
                             <label for="nombre">Ingrese el nombre</label>
@@ -87,27 +87,71 @@
         </div>
     </div>
 
-    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="node_modules/jquery/dist/jquery.js"></script>
+    <script src="//cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function(){
+            $('#botonCrear').click(function(){
+                $("#formulario")[0].reset();
+                $(".modal-title").text("Crear Usuario");
+                $("#action").val("Crear");
+                $("#imagen_subida").html("");
+            });
             var dataTable = $('#datos_usuario').DataTable({
                 "processing": true,
                 "serverSide": true,
                 "order": [],
                 "ajax":{
                     url: "obtener_registros.php",
-                    type: "POST"
+                    type: "POST",
                 },
-                "columnsDefs": [
+                "columnsDefs":[
                     {
                     "targets":[0, 3, 4],
                     "orderable": false,
-                    },
+                    },  
                 ]
-            })
+            });
         });
+
+        $(document).on('submit', '#formulario', function(event){
+            event.preventDefault();
+            var nombres = $("#nombre").val();
+            var apellidos = $("#apellidos").val();
+            var telefono = $("#telefono").val();
+            var email = $("#email").val();
+            var extension = $("#imagen_usuario").val().split('.').pop().toLowerCase();
+
+            if(extension != ''){
+                if(jQuery.inArray(extension, ['gif', 'png', 'jpg', 'jpeg']) == -1){
+                    alert("Formato de imagen inválido");
+                    $("#imagen_usuario").val('');
+                    return false;
+                }
+            }
+
+            if(nombres != '' && apellidos != '' && email != ''){
+                $.ajax({
+                    url: "crear.php",
+                    method: "POST",
+                    data:new FormData(this),
+                    contentType: false,
+                    processData: false,
+                    success: function(data){
+                        alert(data);
+                        $('#formulario')[0].reset();
+                        $('#modalUsuario').modal.hide();
+                        dataTable.ajax.reload();
+                    }
+                });
+            }else{
+                alert("Algunos campos son obligatorios");
+            }
+
+        });
+
     </script>
 
   </body>
