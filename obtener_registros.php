@@ -32,7 +32,7 @@
         $imagen = '';
         if($fila["imagen"] != ''){
             $imagen = '<img src="img/' . $fila["imagen"] . '" class=img-thumbnail" 
-            width="50" height="50"';
+            width="50" height="35" />';
         }else{
             $imagen = '';
         }

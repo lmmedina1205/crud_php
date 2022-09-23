@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="es">
-  <head>
+
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CRUD con PHP, PDO, Ajax y Datatables.js</title>
@@ -8,8 +9,9 @@
     <link rel="stylesheet" href="//cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="node_modules/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="css/estilos.css">
-  </head>
-  <body>
+</head>
+
+<body>
 
     <div class="container fondo">
         <h1 class="text-center">CRUD con PHP, PDO, Ajax y Datatables.js</h1>
@@ -17,9 +19,8 @@
         <div class="row">
             <div class="col-2 offset-10">
                 <div class="text-center">
-                    <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal"
-                    data-bs-target="#modalUsuario" id="botonCrear">
-                    <i class="bi bi-plus-circle-fill"></i> &nbsp; Crear
+                    <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#modalUsuario" id="botonCrear">
+                        <i class="bi bi-plus-circle-fill"></i> &nbsp; Crear
                     </button>
                 </div>
             </div>
@@ -41,7 +42,7 @@
                         <th>Editar</th>
                         <th>Borrar</th>
                     </tr>
-                </thead>    
+                </thead>
             </table>
         </div>
     </div>
@@ -87,72 +88,76 @@
         </div>
     </div>
 
-    <script src="node_modules/jquery/dist/jquery.js"></script>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
     <script src="//cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
     <script type="text/javascript">
-        $(document).ready(function(){
-            $('#botonCrear').click(function(){
+        $(document).ready(function() {
+            $("#botonCrear").click(function() {
                 $("#formulario")[0].reset();
                 $(".modal-title").text("Crear Usuario");
                 $("#action").val("Crear");
+                $("#operacion").val("Crear");
                 $("#imagen_subida").html("");
             });
             var dataTable = $('#datos_usuario').DataTable({
                 "processing": true,
                 "serverSide": true,
                 "order": [],
-                "ajax":{
+                "ajax": {
                     url: "obtener_registros.php",
                     type: "POST",
                 },
-                "columnsDefs":[
-                    {
-                    "targets":[0, 3, 4],
+                "columnsDefs": [{
+                    "targets": [0, 3, 4],
                     "orderable": false,
-                    },  
-                ]
+                }, ]
             });
-        });
 
-        $(document).on('submit', '#formulario', function(event){
-            event.preventDefault();
-            var nombres = $("#nombre").val();
-            var apellidos = $("#apellidos").val();
-            var telefono = $("#telefono").val();
-            var email = $("#email").val();
-            var extension = $("#imagen_usuario").val().split('.').pop().toLowerCase();
+            //Codigo de inserción
 
-            if(extension != ''){
-                if(jQuery.inArray(extension, ['gif', 'png', 'jpg', 'jpeg']) == -1){
-                    alert("Formato de imagen inválido");
-                    $("#imagen_usuario").val('');
-                    return false;
-                }
-            }
+            $(document).on('submit', '#formulario', function(event) {
+                event.preventDefault();
+                var nombres = $("#nombre").val();
+                var apellidos = $("#apellidos").val();
+                var telefono = $("#telefono").val();
+                var email = $("#email").val();
+                var extension = $("#imagen_usuario").val().split('.').pop().toLowerCase();
 
-            if(nombres != '' && apellidos != '' && email != ''){
-                $.ajax({
-                    url: "crear.php",
-                    method: "POST",
-                    data:new FormData(this),
-                    contentType: false,
-                    processData: false,
-                    success: function(data){
-                        alert(data);
-                        $('#formulario')[0].reset();
-                        $('#modalUsuario').modal.hide();
-                        dataTable.ajax.reload();
+                if (extension != '') {
+                    if (jQuery.inArray(extension, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
+                        alert("Formato de imagen inválido");
+                        $("#imagen_usuario").val('');
+                        return false;
                     }
-                });
-            }else{
-                alert("Algunos campos son obligatorios");
-            }
+                }
+
+                if (nombres != '' && apellidos != '' && email != '') {
+                    $.ajax({
+                        url: "crear.php",
+                        method: "POST",
+                        data: new FormData(this),
+                        contentType: false,
+                        processData: false,
+                        success: function(data) {
+                            alert(data);
+                            $('#formulario')[0].reset();
+                            $('#modalUsuario').modal('hide');
+                            dataTable.ajax.reload();
+                        }
+                    });
+                } else {
+                    alert("Algunos campos son obligatorios");
+                }
+
+            });
 
         });
 
+        
     </script>
 
-  </body>
+</body>
+
 </html>

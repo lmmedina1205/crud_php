@@ -8,16 +8,15 @@ if ($_POST["operacion"] == "Crear"){
     if ($_FILES["imagen_usuario"]["name"] != ''){
         $imagen = subir_imagen();
     }
-    $stmt = $conexion->prepare("INSERT INTO usuarios(nombre, apellidos, imagen, telefono, email)
-    VALUES(:nombre, :apellidos, :imagen, :telefono, :email)");
+    $stmt = $conexion->prepare("INSERT INTO usuarios(nombre, apellidos, imagen, telefono, email)VALUES(:nombre, :apellidos, :imagen, :telefono, :email)");
 
-    $resultado = $stmt->execute();(
+    $resultado = $stmt->execute(
         array(
-            ':nombre'       => $_POST["nombre"],
+            ':nombre'    => $_POST["nombre"],
             ':apellidos'    => $_POST["apellidos"],
-            ':telefono'     => $_POST["telefono"],
-            ':email'        => $_POST["email"],
-            ':imagen'       => $imagen
+            ':telefono'    => $_POST["telefono"],
+            ':email'    => $_POST["email"],
+            ':imagen'    => $imagen
         )
     );
 
